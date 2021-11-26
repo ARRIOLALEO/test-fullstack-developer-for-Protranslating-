@@ -7,10 +7,7 @@ class ClientService {
   }
 
   async getClient(id) {
-    let clientWithId = null;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      const clientWithId = await Client.findById(id);
-    }
+    const clientWithId = await Client.findById(id);
     return clientWithId || [`no client was found with the id ${id}`];
   }
 
@@ -29,10 +26,7 @@ class ClientService {
   }
 
   async deleteClient(id) {
-    let deletedClient = null;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      deletedClient = await Client.findByIdAndDelete(id);
-    }
+    const deletedClient = await Client.findByIdAndDelete(id);
     return deletedClient || [`client was not deleted check the id ${id}`];
   }
 }

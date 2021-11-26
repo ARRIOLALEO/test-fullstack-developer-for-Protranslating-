@@ -2,37 +2,62 @@ const express = require("express");
 const ClientService = require("../services/clients");
 
 const cors = require("cors");
+
 function clientsAPI(app) {
+  /**
+   * @swagger
+   * components:
+   *    schemas:
+   *      Client:
+   *        type: object
+   *        required:
+   *          - name
+   *          - email
+   *          - phone
+   *        properties:
+   *          _id:
+   *            type: string
+   *          name:
+   *            type: string
+   *          email:
+   *            type: string
+   *          phone:
+   *            type: number
+   *          providers:
+   *            type: array
+   *        example:
+   *          _id: 165161akshdkjas
+   *          name: Mario Arriola
+   *          email: marioarriolapacheco@gmail.com
+   *          phone: +99654022666
+   *          providers: [65546sadsa, sa6444ad]
+   *
+   */
   const router = express.Router();
   const clientService = new ClientService();
-
   /**
-   * @swagger
+   *@swagger
    *  tags:
-   *     name: Clients
-   *     description: Clients CRUD API
-   *
-   *
+   *    name: Client
+   *    description: CRUD clients
    */
 
   /**
    * @swagger
-   *  /api/v1/clients:
-   *      get:
-   *          description:  fetch and list of all clients with their providers
-   *          tags: [Clients]
-   *          responses:
-   *              200:
-   *                  description: All the clients were fetched
-   *                  content:
-   *                      application/json:
-   *                          schema:
-   *                              type: array
-   *                              items:
-   *                                  $ref:'#/utils/schemas/Client'
+   * /api/v1/clients:
+   *  get:
+   *    summary: fetch all the clients in the DB
+   *    tags: [Client]
+   *    responses:
+   *      200:
+   *        description: clients were feched
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: array
+   *              items:
+   *                $ref: '#/components/schemas/Client'
    */
-  // Retrieve all Clients
-
   router.get("/", async (req, res, next) => {
     try {
       const clients = await clientService.getClients();
@@ -44,39 +69,32 @@ function clientsAPI(app) {
       next(err);
     }
   });
-
   /**
-   *@swagger
+   * @swagger
    * /api/v1/clients/{id}:
-   *   get:
-   *    description: fetch a client by its Id
-   *    tags : [fetch client by id]
+   *  get:
+   *    summary: fetch one client by index
+   *    tags: [Client]
    *    parameters:
    *      - in: path
    *        name: id
    *        schema:
-   *          type:string
+   *          type: string
    *        required: true
-   *        description : the id of the customer
+   *        description: the client id
    *    responses:
    *      200:
-   *        description: Client fetched with index
-   *        content:
+   *        summary: customer was fetch by id
+   *        contents:
    *          application/json:
    *            schema:
-   *              $ref : "#/utils/schema/clients"
-   *      404:
-   *        description : client was not found
-   *      500:
-   *        description: server error
-   *
+   *              $ref: '#/components/schemas/Client'
    */
-  // Retrieve a single Client with id
-  router.get("/:clientId", async (req, res, next) => {
-    const { clientId } = req.params;
-    console.log(clientId);
+
+  router.get("/:id", async (req, res, next) => {
+    const { id } = req.params;
     try {
-      const client = await clientService.getClient(clientId);
+      const client = await clientService.getClient(id);
       res.status(200).json({
         data: client,
         message: "customer with Id",
@@ -88,20 +106,24 @@ function clientsAPI(app) {
 
   /**
    * @swagger
-   * /clients:
-   *    put:
-   *      description: Use to return all customers
-   *    parameters:
-   *      - name: customer
-   *        in: query
-   *        description: Name of our customer
-   *        required: false
-   *        schema:
-   *          type: string
-   *          format: string
+   * /api/v1/clients:
+   *  post:
+   *    summary: create a new client
+   *    tags: [Client]
+   *    requestBody:
+   *      require: true
+   *      content:
+   *        application/json:
+   *          schema:
+   *            $ref: '#/components/schema/Client'
    *    responses:
-   *      '201':
-   *        description: Successfully created user
+   *      200:
+   *        description: client was create
+   *        content:
+   *          application/json:
+   *            $ref: '#/components/schema/Client'
+   *      500:
+   *        description: Server Error
    */
 
   router.post("/", async (req, res, next) => {
@@ -117,7 +139,34 @@ function clientsAPI(app) {
       next(err);
     }
   });
-
+  /**
+   * @swagger
+   *  /api/v1/clients/{id}:
+   *    patch:
+   *      summary: modify client with ID
+   *      tags: [Client]
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: string
+   *          required: true
+   *          description: client in
+   *      requestBody:
+   *        required: true
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Client'
+   *      responses:
+   *        200:
+   *          description: client was modify succefully
+   *          content:
+   *            application/json:
+   *              $ref: '#/components/schemas/Client'
+   *        500:
+   *          description: Server Error
+   */
   router.patch("/:clientId", async (req, res, next) => {
     const { body: data } = req;
     const { clientId } = req.params;
@@ -133,13 +182,34 @@ function clientsAPI(app) {
       next(err);
     }
   });
-
-  router.delete("/:clientId", async (req, res, next) => {
-    const { clientId } = req;
+  /**
+   * @swagger
+   * /api/v1/clients/{id}:
+   *  delete:
+   *    summary: delete a customer by id
+   *    tags: [Client]
+   *    parameters:
+   *      - in: path
+   *        name: id
+   *        schema:
+   *          type: string
+   *        required: true
+   *        description: this is the customer id
+   *    responses:
+   *      200:
+   *        description: client was deleted
+   *      500:
+   *        description: Server Error
+   *
+   *
+   *
+   */
+  router.delete("/:id", async (req, res, next) => {
+    const { id } = req.params;
     try {
-      const deletedClient = clientService.deleteClient(clientId);
+      const deletedClient = clientService.deleteClient(id);
       res.status(200).json({
-        data: `client with the id ${clientId} was removed from the database`,
+        data: `client with the id ${id} was removed from the database`,
         message: "resister deleted",
       });
     } catch (err) {
@@ -148,5 +218,4 @@ function clientsAPI(app) {
   });
   app.use("/api/v1/clients", router);
 }
-
 module.exports = clientsAPI;

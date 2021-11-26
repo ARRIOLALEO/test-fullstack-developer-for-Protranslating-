@@ -12,6 +12,7 @@ const providersAPI = require("./routes/providers");
 // extends infoObject swagger
 const swaggerOptions = {
   swaggerDefinition: {
+    openapi: "3.0.0",
     info: {
       version: "1.0.0",
       title: " Protranslating (now part of BigLS)",
@@ -20,10 +21,10 @@ const swaggerOptions = {
         name: "Mario Arriola",
         email: "marioarriolapacheco@gmail.com",
       },
-      servers: ["http://localhost:3000"],
+      servers: [{ url: "http://localhost:8000" }],
     },
   },
-  apis: ["./routes/clients.js"],
+  apis: ["./routes/*.js"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
