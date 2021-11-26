@@ -4,6 +4,25 @@ const ProviderService = require("../services/providers");
 function providersAPI(app) {
   const router = exppress.Router();
   const providerService = new ProviderService();
+
+  /**
+   * @swagger
+   * components:
+   *  schemas:
+   *    Provider:
+   *      type: object
+   *      require:
+   *        - name
+   *      properties:
+   *        _id:
+   *          type: string
+   *        name:
+   *          type: string
+   *      example:
+   *        _id: 165161aninkjdfjb
+   *        name: provider name
+   *
+   */
   /**
    * @swagger
    *  tags:
@@ -14,11 +33,20 @@ function providersAPI(app) {
    */
 
   /**
-   *  @swagger
+   * @swagger
    *  /api/v1/providers:
-   *      get:
-   *          description : fetch and list all providers
-   *          tags: [Provider]
+   *    get:
+   *      summary: fetch all the providers
+   *      tags: [Provider]
+   *      responses:
+   *        200:
+   *          description: all the providers were fetched
+   *          content:
+   *            application/json:
+   *              schema:
+   *                type: array
+   *                items:
+   *                  $ref: '#/components/schemas/Provider'
    */
 
   router.get("/", async (req, res, next) => {
@@ -35,10 +63,24 @@ function providersAPI(app) {
 
   /**
    * @swagger
-   * /api/vi/providers/{id}:
-   *     get:
-   *         description: Retrive one Provider
-   *         tags: [Provider]
+   *  /api/v1/providers/{id}:
+   *    get:
+   *      summary: fetch one provider by id
+   *      tags: [Provider]
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: string
+   *          required: true
+   *          description: the client provider
+   *      responses:
+   *        200:
+   *          summary: the provider was fetched by id
+   *          contents:
+   *            application/json:
+   *              schema:
+   *                $ref: '#/components/schemas/Provider'
    */
 
   router.get("/:idProvider", async (req, res, next) => {
@@ -56,10 +98,24 @@ function providersAPI(app) {
 
   /**
    * @swagger
-   * /api/v1/providers:
-   *      put:
-   *          description: create a new provider
-   *          tags: [Provider]
+   *  /api/v1/providers:
+   *    post:
+   *      summary: create a new provider
+   *      tags: [Provider]
+   *      requestBody:
+   *        require: true
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Provider'
+   *      responses:
+   *        200:
+   *          description: provider was created
+   *          content:
+   *            application/json:
+   *              $ref: '#/components/schemas/Provider'
+   *        500:
+   *          description: Server Error
    */
 
   router.post("/", async (req, res, next) => {
@@ -77,17 +133,38 @@ function providersAPI(app) {
 
   /**
    * @swagger
-   * /api/v1/providers/{id}:
-   *     patch:
-   *         description: update a provider
-   *         tags: [Provider]
+   *  /api/v1/providers/{id}:
+   *    patch:
+   *      summary: modify provider by id
+   *      tags: [Provider]
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: string
+   *          required: true
+   *          description: provider id
+   *      requestBody:
+   *        required: true
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/Provider'
+   *      responses:
+   *        200:
+   *          description: provider was modify succefully
+   *          content:
+   *            application/json:
+   *              $ref: '#/components/schemas/Provider'
+   *        500:
+   *          description: Server Error
    */
 
-  router.patch("/:idProvider", async (req, res, next) => {
+  router.patch("/:id", async (req, res, next) => {
     const { body: data } = req;
-    const { idProvider } = req.params;
+    const { id } = req.params;
     try {
-      const updateProvider = await providerService.update(idProvider, data);
+      const updateProvider = await providerService.update(id, data);
       res.status(200).json({
         data: updateProvider,
         message: "updated",
@@ -99,10 +176,23 @@ function providersAPI(app) {
 
   /**
    * @swagger
-   * /api/v1/providers/{id}:
-   *      delete:
-   *          description: delete a provider
-   *          tags: [Provider]
+   *  /api/v1/providers/{id}:
+   *    delete:
+   *      summary: delete Provider by id
+   *      tags: [Provider]
+   *      parameters:
+   *        - in: path
+   *          name: id
+   *          schema:
+   *            type: string
+   *          required: true
+   *          description: this is the provider id
+   *      responses:
+   *        200:
+   *          description: provider was deleted
+   *        500:
+   *          description: server Error
+   *
    */
   router.delete("/:idProvider", async (req, res, next) => {
     const { idProvider } = req.params;

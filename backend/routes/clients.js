@@ -167,12 +167,12 @@ function clientsAPI(app) {
    *        500:
    *          description: Server Error
    */
-  router.patch("/:clientId", async (req, res, next) => {
+  router.patch("/:id", async (req, res, next) => {
     const { body: data } = req;
-    const { clientId } = req.params;
+    const { id } = req.params;
 
     try {
-      const updateClient = await clientService.updateClient(clientId, data);
+      const updateClient = await clientService.updateClient(id, data);
 
       res.status(200).json({
         data: updateClient,
