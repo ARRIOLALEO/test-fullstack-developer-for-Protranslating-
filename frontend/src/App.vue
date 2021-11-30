@@ -3,40 +3,25 @@
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
           alt="Vuetify Name"
           class="shrink mt-1 hidden-sm-and-down"
           contain
           min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          src="./assets/logo.svg"
           width="100"
         />
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-        <span class="mr-2">Latest Release</span>
+      <v-btn href="https://protranslating.com/" target="_blank" text>
+        <span class="mr-2">PROTANSLATING WEB</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-main>
-      <v-data-table
-        :headers="headers"
-        :items="clients"
-        class="elevation-1"
-        :search="search"
-        :custom-filter="filterOnlyCapsText"
-      >
+      <v-data-table :headers="headers" :items="clients" class="elevation-1" :search="search">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Clientes</v-toolbar-title>
@@ -45,11 +30,7 @@
             <v-btn class="mx2" color="#e040fb" @click="createClient()">New Client</v-btn>
           </v-toolbar>
 
-          <v-text-field
-            v-model="search"
-            label="Search (UPPER CASE ONLY)"
-            class="mx-4"
-          ></v-text-field>
+          <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
         </template>
         <template v-slot:item.providers="{ item }">
           <div v-for="(provider, key) in item.providers" :key="key">
@@ -98,15 +79,17 @@
                 </v-col>
                 <v-col cols="12">
                   <v-data-table
+                    v-model="client.providers"
                     :headers="headerproviders"
                     :items="dataproviders"
                     :hide-default-footer="true"
-                    :single-select="singleSelect"
                     item-key="_id"
                     show-select
                   >
                     <template v-slot:item.actions="{ item }">
-                      <v-icon small color="black darken-2"> mdi-pencil-box-outline</v-icon>
+                      <v-btn icon @click="editProvider(item._id, item.name)">
+                        <v-icon small color="black darken-2"> mdi-pencil-box-outline</v-icon></v-btn
+                      >
                       <v-btn icon @click="deleteProvider(item._id)"
                         ><v-icon small="black darken-2"
                           >{{ item.name }} mdi-trash-can
@@ -117,6 +100,23 @@
                 </v-col>
                 <v-col cols="12">
                   <v-btn @click="save">save </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-card>
+      </v-dialog>
+      <!-- modify provider dialog -->
+      <v-dialog v-model="dialogProvider" max-width="500">
+        <v-card>
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field v-model="provider.name"> {{ provider.name }}</v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn @click="updateProvider(provider.name)">UPDATE</v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -201,6 +201,7 @@ export default {
     clients: [],
     dataproviders: [],
     dialog: false,
+    dialogProvider: false,
     operation: "",
   }),
   methods: {
@@ -223,6 +224,7 @@ export default {
         phone: this.client.phone,
         providers: this.client.providers,
       };
+      console.log(parameters);
       if (this.operation == "newClient") {
         await ServiceClient.saveClient(parameters);
       } else {
@@ -241,6 +243,7 @@ export default {
       this.client.email = email;
       this.client.phone = phone;
       this.client.providers = providers;
+      this.provider.providers = providers;
       this.dialog = true;
       this.operation = "editClient";
     },
@@ -252,12 +255,27 @@ export default {
       const parameters = {
         name: this.provider.name,
       };
+      this.provider.name = "";
       await ServiceProvider.saveProvider(parameters);
+      this.loadProviders();
+    },
+    editProvider(id, name) {
+      this.provider.id = id;
+      this.provider.name = name;
+      this.dialogProvider = true;
+    },
+    async updateProvider(name) {
+      const parameters = {
+        name: name,
+      };
+      await ServiceProvider.updateProvider(this.provider.id, parameters);
+      this.dialogProvider = false;
       this.loadProviders();
     },
     async deleteProvider(id) {
       await ServiceProvider.deleteProvider(id);
       this.loadProviders();
+      this.load();
     },
   },
 };
