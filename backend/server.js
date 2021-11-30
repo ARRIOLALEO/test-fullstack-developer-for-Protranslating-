@@ -2,6 +2,9 @@ const express = require("express");
 const Database = require("./config/databse");
 const app = express();
 
+const cors = require("cors");
+const corsOptions = require("./utils/cors/cors");
+
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -9,6 +12,7 @@ const { config } = require("./config/index");
 
 const clientsAPI = require("./routes/clients");
 const providersAPI = require("./routes/providers");
+
 // extends infoObject swagger
 const swaggerOptions = {
   swaggerDefinition: {
@@ -32,6 +36,9 @@ app.use("/api/v1/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //body parser
 app.use(express.json());
+
+//cors for routes
+app.use(cors(corsOptions));
 
 //Routes
 clientsAPI(app);

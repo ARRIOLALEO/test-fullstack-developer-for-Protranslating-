@@ -1,8 +1,6 @@
 const express = require("express");
 const ClientService = require("../services/clients");
 
-const cors = require("cors");
-
 function clientsAPI(app) {
   /**
    * @swagger

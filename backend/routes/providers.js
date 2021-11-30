@@ -1,6 +1,10 @@
 const exppress = require("express");
 const ProviderService = require("../services/providers");
 
+const cors = require("cors");
+
+const corsOptions = require("../utils/cors/cors");
+
 function providersAPI(app) {
   const router = exppress.Router();
   const providerService = new ProviderService();
@@ -49,7 +53,7 @@ function providersAPI(app) {
    *                  $ref: '#/components/schemas/Provider'
    */
 
-  router.get("/", async (req, res, next) => {
+  router.get("/", cors(corsOptions), async (req, res, next) => {
     try {
       const providers = await providerService.getAll();
       res.status(200).json({
