@@ -10,11 +10,11 @@ MongoDB
 ## Usage
 
 Clone repo
+```
+git repo clone ARRIOLALEO/test-fullstack-developer-for-Protranslating-
 
-gh repo clone ARRIOLALEO/test-fullstack-developer-for-Protranslating-
-
-cd folder
-
+cd test-fullstack-developer-for-Protranslating-
+```
 ## Project setup (Backend)
 
 1.change directory
