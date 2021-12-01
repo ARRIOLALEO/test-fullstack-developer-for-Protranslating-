@@ -128,4 +128,4 @@ http://localhost:8080
 ```
 
 ##video install instructions
-[![Watch the video](https://ibb.co/BgpN78s)](https://youtu.be/pSjtsXq0YYg)
+[![Watch the video](https://i.ibb.co/Jz1QbXk/Screenshot-from-2021-12-01-13-41-39.png)](https://youtu.be/pSjtsXq0YYg)
