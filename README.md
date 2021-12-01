@@ -1,4 +1,4 @@
-#Test fullstack developer for Protranslating MEVR stack
+# Test fullstack developer for Protranslating MEVR stack
 
 ## Requirements
 
@@ -17,7 +17,7 @@ cd folder
 
 ## Project setup (Backend)
 
-1
+1.change directory
 
 ```
 cd backend
@@ -127,5 +127,5 @@ http://localhost:8080
 
 ```
 
-##video install instructions
+## video install instructions
 [![Watch the video](https://i.ibb.co/Jz1QbXk/Screenshot-from-2021-12-01-13-41-39.png)](https://youtu.be/pSjtsXq0YYg)
