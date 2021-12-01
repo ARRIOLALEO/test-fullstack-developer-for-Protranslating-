@@ -2,6 +2,11 @@
 
 ## Requirements
 
+```
+Node
+MongoDB
+```
+
 ## Usage
 
 Clone repo
@@ -121,3 +126,6 @@ http://localhost:8080
 └── vue.config.js
 
 ```
+
+##video install instructions
+[![Watch the video](https://ibb.co/BgpN78s)](https://youtu.be/pSjtsXq0YYg)

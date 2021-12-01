@@ -66,7 +66,13 @@
                   </v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field v-model="client.phone" label="Client Phone" solo required>
+                  <v-text-field
+                    v-model.number="client.phone"
+                    label="Client Phone"
+                    type="number"
+                    solo
+                    required
+                  >
                     {{ client.phone }}
                   </v-text-field>
                 </v-col>
@@ -190,7 +196,7 @@ export default {
       id: null,
       name: "",
       email: "",
-      phone: "",
+      phone: 11111,
       providers: [],
     },
     provider: {
