@@ -1,4 +1,4 @@
-# Test fullstack developer for Protranslating MEVR stack
+# Test fullstack developer 
 
 ## Requirements
 
